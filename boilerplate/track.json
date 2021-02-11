@@ -21,18 +21,11 @@
   ],
   "operations": [
     {
-      "name": "index-without-pipeline",
+      "name": "index-append",
       "operation-type": "bulk",
       "bulk-size": {{bulk_size | default(50)}},
       "ingest-percentage": {{ ingest_percentage | default(100) }}
     },
-    {
-      "name": "index-with-pipeline",
-      "operation-type": "bulk",
-      "pipeline": "nginx-logs",
-      "bulk-size": {{bulk_size | default(50)}},
-      "ingest-percentage": {{ ingest_percentage | default(100) }}
-    }
   ],
   "challenges": [
     {
