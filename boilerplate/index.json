@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "index.number_of_shards": {{number_of_shards | default(1)}},
+    "index.number_of_replicas": {{number_of_replicas | default(1)}}
+  },
+  "mappings": {
+    "properties": {
+      "directory": {
+        "norms": false,
+        "type": "text"
+      },
+      "source": {
+        "norms": false,
+        "type": "text"
+      },
+      "useragent": {
+        "norms": false,
+        "type": "text"
+      },
+      "bytes": {
+        "norms": false,
+        "type": "integer"
+      },
+      "statuscode": {
+        "norms": false,
+        "type": "integer"
+      }
+    }
+  }
+}

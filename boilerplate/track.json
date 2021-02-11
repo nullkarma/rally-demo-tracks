@@ -1,0 +1,138 @@
+{
+  "version": 2,
+  "indices": [
+    {
+      "name": "boilerplate",
+      "body": "index.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "boilerplate",
+      "documents": [
+        {
+          "source-file": "documents.json.bz2",
+          "document-count": 10000000,
+          "compressed-bytes": 223909845,
+          "uncompressed-bytes": 1444399210
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "name": "index-without-pipeline",
+      "operation-type": "bulk",
+      "bulk-size": {{bulk_size | default(50)}},
+      "ingest-percentage": {{ ingest_percentage | default(100) }}
+    },
+    {
+      "name": "index-with-pipeline",
+      "operation-type": "bulk",
+      "pipeline": "nginx-logs",
+      "bulk-size": {{bulk_size | default(50)}},
+      "ingest-percentage": {{ ingest_percentage | default(100) }}
+    }
+  ],
+  "challenges": [
+    {
+      "name": "default-settings",
+      "default": true,
+      "schedule": [
+        {
+          "operation": "delete-index"
+        },
+        {
+          "operation": {
+            "operation-type": "create-index"
+          }
+        },
+        {
+          "operation": "index-append",
+          "clients": {{ bulk_clients | default(8) }}
+        }
+      ]
+    },
+    {
+      "name": "3-shards",
+      "schedule": [
+        {
+          "operation": "delete-index"
+        },
+        {
+          "operation": {
+            "operation-type": "create-index",
+            "settings": {
+              "index.number_of_shards": 3
+            }
+          }
+        },
+        {
+          "operation": "index-append",
+          "clients": {{ bulk_clients | default(8) }}
+        }
+      ]
+    },
+    {
+      "name": "30s-refresh",
+      "schedule": [
+        {
+          "operation": "delete-index"
+        },
+        {
+          "operation": {
+            "operation-type": "create-index",
+            "settings": {
+              "index.refresh_interval": "30s"
+            }
+          }
+        },
+        {
+          "operation": "index-append",
+          "clients": {{ bulk_clients | default(8) }}
+        }
+      ]
+    },
+    {
+      "name": "async-translog",
+      "schedule": [
+        {
+          "operation": "delete-index"
+        },
+        {
+          "operation": {
+            "operation-type": "create-index",
+            "settings": {
+              "index.translog.durability": "async",
+              "index.refresh_interval": "30s"
+            }
+          }
+        },
+        {
+          "operation": "index-append",
+          "clients": {{ bulk_clients | default(8) }}
+        }
+      ]
+    },
+    {
+      "name": "ingest-pipeline",
+      "schedule": [
+        {
+          "operation": "delete-index"
+        },
+        {
+          "operation": {
+            "operation-type": "create-index",
+            "settings": {
+              "index.refresh_interval": "30s"
+            }
+          }
+        },
+        {
+          "operation": "index-append",
+          "clients": {{ bulk_clients | default(8) }}
+        }
+      ]
+    }
+  ]
+}
